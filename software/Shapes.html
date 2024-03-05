@@ -1,0 +1,121 @@
+<head>
+<title>Shapes Game</title>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<style>
+body {
+  background-image: url('shapes_background.webp');
+  background-size: cover;
+}
+.shape {
+position: absolute;
+width: 50px;
+height: 50px;
+}
+.circle {
+border-radius: 50%;
+}
+.square {
+border-radius: 0%;
+}
+.modal {
+display: none;
+position: fixed;
+z-index: 1;
+left: 0;
+top: 0;
+width: 100%;
+height: 100%;
+overflow: auto;
+background-color: rgba(0,0,0,0.4);
+}
+.modal-content {
+background-color: #fefefe;
+margin: 15% auto;
+padding: 20px;
+border: 1px solid #888;
+width: 80%;
+}
+</style>
+</head>
+<body>
+<h1 id="score">Score: 0</h1>
+<h1 id="timer">Time: 60</h1>
+<div id="shapesContainer"></div>
+<div id="gameOverModal" class="modal">
+  <div class="modal-content">
+    <h1>Game Over!</h1>
+    <p id="finalScore"></p>
+    <button id="playAgain">Play Again?</button>
+  </div>
+</div>
+<script>
+$(document).ready(function() {
+var score = 0;
+var time = 60;
+
+function startTimer(){
+var countDown = setInterval(function(){
+time--;
+$('#timer').text('Time: ' + time);
+if(time <= 0 ){
+clearInterval(countDown);
+stopGame();
+}
+}, 1000);
+}
+
+function stopGame(){
+$('#shapesContainer').empty();
+$('#finalScore').text('Your Score: ' + score);
+$('#gameOverModal').css('display', 'block');
+}
+
+$('#playAgain').click(function() {
+score = 0;
+time = 60;
+$('#score').text('Score: ' + score);
+$('#timer').text('Time: ' + time);
+$('#shapesContainer').empty();
+$('#gameOverModal').css('display', 'none');
+startTimer();
+});
+
+function createShape() {
+var shape = $('<div>').addClass('shape');
+var isCircle = Math.random() > 0.5;
+if (isCircle) {
+shape.addClass('circle');
+} else {
+shape.addClass('square');
+}
+var color = '#' + Math.floor(Math.random()*16777215).toString(16);
+shape.css('background-color', color);
+$('#shapesContainer').append(shape);
+animateShape(shape);
+
+shape.click(function() {
+score += 1;
+$('#score').text('Score: ' + score);
+$(this).remove();
+});
+
+setTimeout(function() {
+shape.remove();
+}, Math.random() * 20000 + 5000);
+}
+
+function animateShape(shape) {
+shape.animate({
+top: Math.random() * ($(window).height() - shape.height()),
+left: Math.random() * ($(window).width() - shape.width())
+}, 1000, "swing", function() {
+animateShape(shape);
+});
+}
+
+startTimer();
+setInterval(createShape, 1000);
+});
+</script>
+</body>
+</html>
