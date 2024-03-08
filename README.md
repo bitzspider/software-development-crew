@@ -1,6 +1,6 @@
 ﻿# software-development-crew
 
- This repository is based on the CrewAI framework, utilizing AI agents to develop software.
+ This project is based on the CrewAI framework, for utilizing AI agents to develop software.
  
  The agents can read, write, and modify files in the software directory based on user prompts.
 
